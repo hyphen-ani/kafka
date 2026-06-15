@@ -26,7 +26,9 @@ public class UserController {
 
     @PostMapping("/{message}")
     public ResponseEntity<String> sendMessage(@PathVariable String message){
-        kafkaTemplate.send(KAFKA_RANDOM_USER_TOPIC, message);
+        for (int i = 0; i < 1000; i++) {
+            kafkaTemplate.send(KAFKA_RANDOM_USER_TOPIC, message + i);
+        }
         return ResponseEntity.ok("Message Queued :" + message);
     }
 }
