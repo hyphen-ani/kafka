@@ -1,9 +1,9 @@
 package com.anirudh.user_service.service;
 
+import com.anirudh.event.UserCreatedEvent;
 import com.anirudh.user_service.dto.CreateUserRequestDTO;
 import com.anirudh.user_service.entity.User;
 import com.anirudh.user_service.entity.UserRepository;
-import com.anirudh.user_service.event.UserCreatedEvent;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
