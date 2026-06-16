@@ -1,5 +1,7 @@
 package com.anirudh.user_service.controller;
 
+import com.anirudh.user_service.dto.CreateUserRequestDTO;
+import com.anirudh.user_service.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,11 +19,17 @@ public class UserController {
     private String KAFKA_RANDOM_USER_TOPIC;
 
     private final KafkaTemplate<String, String> kafkaTemplate;
+    private final UserService userService;
 
     @GetMapping
     public ResponseEntity<String> getHealth(){
         String message = "OK";
         return ResponseEntity.ok(message);
+    }
+
+    @PostMapping
+    public ResponseEntity<String> createUser(@RequestBody CreateUserRequestDTO createUserRequestDTO){
+
     }
 
     @PostMapping("/{message}")
