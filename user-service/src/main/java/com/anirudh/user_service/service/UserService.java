@@ -3,7 +3,11 @@ package com.anirudh.user_service.service;
 import com.anirudh.user_service.dto.CreateUserRequestDTO;
 import com.anirudh.user_service.entity.User;
 import com.anirudh.user_service.entity.UserRepository;
+import com.anirudh.user_service.event.UserCreatedEvent;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -11,6 +15,11 @@ import org.springframework.stereotype.Service;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final ModelMapper modelMapper;
+    private final KafkaTemplate<Long, UserCreatedEvent> kafkaTemplate;
+
+    @Value("${kafka.topic.user-created-topic}")
+    private String KAFKA_USER_CREATED_TOPIC;
 
     public void createUser(CreateUserRequestDTO createUserRequestDTO){
         User user = User.builder()
@@ -18,7 +27,10 @@ public class UserService {
                 .email(createUserRequestDTO.getEmail())
                 .build();
 
-        userRepository.save(user);
+        User savedUser = userRepository.save(user);
+        UserCreatedEvent userCreatedEvent = modelMapper.map(savedUser, UserCreatedEvent.class);
+
+        kafkaTemplate.send(KAFKA_USER_CREATED_TOPIC, userCreatedEvent.getId(), userCreatedEvent);
     }
 
 }

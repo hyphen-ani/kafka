@@ -29,7 +29,8 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<String> createUser(@RequestBody CreateUserRequestDTO createUserRequestDTO){
-
+        userService.createUser(createUserRequestDTO);
+        return ResponseEntity.ok("User Created");
     }
 
     @PostMapping("/{message}")
